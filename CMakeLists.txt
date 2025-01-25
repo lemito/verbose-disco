@@ -9,3 +9,6 @@ include_directories(GenerativePatterns/Singleton)
 add_executable(singleton
     GenerativePatterns/Singleton/Singleton.cpp
     GenerativePatterns/Singleton/Singleton.h)
+add_executable(builder
+        GenerativePatterns/Builder/Builder.cpp
+        GenerativePatterns/Builder/Builder.h)
