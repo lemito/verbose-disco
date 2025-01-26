@@ -13,66 +13,84 @@ Director(бригадир) руководит порядком построен�
 #include <ostream>
 #include <vector>
 
-template<typename T>
+template <typename T>
 class Word {
-	public:
-		std::vector<T> _data;
-		Word() = default;
-		~Word() = default;
+ public:
+  std::string _name{};
+  std::vector<T> _data;
+  Word() = default;
+  ~Word() = default;
 
-		friend std::ostream &operator<<(std::ostream &os, const Word &obj) {
-			for (auto &elem : obj._data) {
-				os << elem << " ";
-			}
-			return os;
-		}
+  friend std::ostream &operator<<(std::ostream &os, const Word &obj) {
+    for (auto &elem : obj._data) {
+      os << elem << " ";
+    }
+    return os;
+  }
 };
 
 // Строитель - абстрактный класс, ничего не делает, только описывает
 class Builder {
-	public:
-		virtual ~Builder() = default;
-		virtual void AddM() const = 0;
-		// ...
+ public:
+  virtual ~Builder() = default;
+  virtual const Builder *AddM() const = 0;
+  virtual Builder *setName(const std::string &name) = 0;
+  // ...
 };
 
 class MeowBuilder final : public Builder {
-	Word<char> *_obj{};
-	void _create() { _obj = new Word<char>(); }
+  Word<char> *_obj{};
+  void _create() { _obj = new Word<char>(); }
 
-	public:
-		MeowBuilder() { _create(); }
-		~MeowBuilder() override { delete _obj; }
-		void AddM() const override { _obj->_data.push_back('m'); }
-		void AddE() const { _obj->_data.push_back('e'); }
-		void AddO() const { _obj->_data.push_back('o'); }
-		void AddW() const { _obj->_data.push_back('w'); }
+ public:
+  MeowBuilder() { _create(); }
+  ~MeowBuilder() override { delete _obj; }
+  const MeowBuilder *AddM() const override {
+    _obj->_data.push_back('m');
+    return this;
+  }
+  const MeowBuilder *AddE() const {
+    _obj->_data.push_back('e');
+    return this;
+  }
+  const MeowBuilder *AddO() const {
+    _obj->_data.push_back('o');
+    return this;
+  }
+  const MeowBuilder *AddW() const {
+    _obj->_data.push_back('w');
+    return this;
+  }
 
-		Word<char> *flush() {
-			Word<char> *res = _obj; // сохраняем указ
-			_create(); // делаем сразу новый объект
-			return res;
-		}
+  MeowBuilder *setName(const std::string &name) override {
+    this->_obj->_name = name;
+    return this;
+  }
+
+  Word<char> *flush() {
+    Word<char> *res = _obj;  // сохраняем указ
+    _create();               // делаем сразу новый объект
+    return res;
+  }
 };
 
 // для покзательности -- может возвращаться и <int> и так далее
-template<typename T>
-class MichaelBuilder : public Builder {
-};
+template <typename T>
+class MichaelBuilder : public Builder {};
 
 class Director {
-	Builder *builder = nullptr;
+  Builder *builder = nullptr;
 
-	public:
-		void setBuilder(Builder *bld) { builder = bld; }
-		void buildM() const { builder->AddM(); };
-		void buildAll() const {
-			const auto tp = dynamic_cast<MeowBuilder *>(builder);
-			tp->AddM();
-			tp->AddE();
-			tp->AddO();
-			tp->AddW();
-		};
+ public:
+  void setBuilder(Builder *bld) { builder = bld; }
+  void buildM() const { builder->AddM(); };
+  void buildAll() const {
+    const auto tp = dynamic_cast<MeowBuilder *>(builder);
+    tp->AddM();
+    tp->AddE();
+    tp->AddO();
+    tp->AddW();
+  };
 };
 
 #endif  // BUILDER_H

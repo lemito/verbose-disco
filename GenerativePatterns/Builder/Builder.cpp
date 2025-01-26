@@ -12,7 +12,7 @@ int main(int argc, const char** argv) {
   // создаем прораба
   auto* dir = new Director();
   // назначаем подчиненного
-  dir->setBuilder(mb);
+  dir->setBuilder(mb->setName("some name as parameter"));
   std::cout << "Examples" << std::endl;
   // люто работаем
   dir->buildM();
