@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-int main(int argc, const char** argv) {
+int main() {
   // создаем билдера
   auto* mb = new MeowBuilder();
   // создаем прораба

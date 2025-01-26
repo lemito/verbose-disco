@@ -13,18 +13,18 @@
 class powerator {
  public:
   virtual ~powerator() = default;
-  virtual constexpr double_t Pow(
+  [[nodiscard]] virtual constexpr double_t Pow(
       double_t a, int32_t b) const = 0;  // некая полезная функция
 };
 
-class cmath_powerator : public powerator {
-  constexpr double_t Pow(double_t a, int32_t b) const override {
+class cmath_powerator final : public powerator {
+  [[nodiscard]] constexpr double_t Pow(const double_t a, const int32_t b) const override {
     return pow(a, b);
   }
 };
 
-class my_powerator : public powerator {
-  constexpr double_t Pow(double_t a, int32_t b) const override {
+class my_powerator final : public powerator {
+  [[nodiscard]] constexpr double_t Pow(double_t a, int32_t b) const override {
     if (b == 0) return 1;
     if (b < 0) {
       a = 1 / a;
@@ -46,24 +46,24 @@ class my_powerator : public powerator {
 class Calculator {
  public:
   virtual ~Calculator() = default;
-  virtual powerator* factory()
+  [[nodiscard]] virtual powerator* factory()
       const = 0;  // собственно, сам метод фабрики, создающий некий объект
-  const double_t MagicPow(double_t a, int32_t b) {
+  [[nodiscard]] double_t MagicPow(const double_t a, const int32_t b) const {
     // std::println("Meow");
-    powerator* obj = this->factory();
-    auto res = obj->Pow(a, b);  // вот тут этот объект выполняет функцию
+    const powerator* obj = this->factory();
+    const auto res = obj->Pow(a, b);  // вот тут этот объект выполняет функцию
     delete obj;
     return res;
   };
 };
 
 // реализации классов под конкретную реализацию фабрик (типов)
-class Calculator1 : public Calculator {
-  powerator* factory() const override { return new cmath_powerator(); }
+class Calculator1 final : public Calculator {
+  [[nodiscard]] powerator* factory() const override { return new cmath_powerator(); }
 };
 
-class Calculator2 : public Calculator {
-  powerator* factory() const override { return new my_powerator(); }
+class Calculator2 final : public Calculator {
+  [[nodiscard]] powerator* factory() const override { return new my_powerator(); }
 };
 
 #endif  // FACTORYMETHOD_H
