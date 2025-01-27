@@ -52,7 +52,9 @@
         "variant": "cpp",
         "format": "cpp",
         "text_encoding": "cpp",
-        "print": "cpp"
+        "print": "cpp",
+        "map": "cpp",
+        "unordered_set": "cpp"
     },
     "C_Cpp.default.cppStandard": "c++23"
 }

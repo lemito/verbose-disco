@@ -15,3 +15,4 @@ add_executable(builder
         GenerativePatterns/Builder/Builder.cpp
         GenerativePatterns/Builder/Builder.h)
 add_executable(FactoryMethod GenerativePatterns/FactoryMethod/FactoryMethod.cpp GenerativePatterns/FactoryMethod/FactoryMethod.h)
+add_executable(AbstractFactory GenerativePatterns/AbstrractFactory/AbstractFactory.cpp GenerativePatterns/AbstrractFactory/AbstractFactory.h)
