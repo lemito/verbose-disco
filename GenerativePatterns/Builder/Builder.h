@@ -33,7 +33,7 @@ class Word {
 class Builder {
  public:
   virtual ~Builder() = default;
-  virtual const Builder *AddM() const = 0;
+  [[nodiscard]] virtual const Builder *AddM() const = 0;
   virtual Builder *setName(const std::string &name) = 0;
   // ...
 };
@@ -45,19 +45,19 @@ class MeowBuilder final : public Builder {
  public:
   MeowBuilder() { _create(); }
   ~MeowBuilder() override { delete _obj; }
-  const MeowBuilder *AddM() const override {
+  [[nodiscard]] const MeowBuilder *AddM() const override {
     _obj->_data.push_back('m');
     return this;
   }
-  const MeowBuilder *AddE() const {
+  [[nodiscard]] const MeowBuilder *AddE() const {
     _obj->_data.push_back('e');
     return this;
   }
-  const MeowBuilder *AddO() const {
+  [[nodiscard]] const MeowBuilder *AddO() const {
     _obj->_data.push_back('o');
     return this;
   }
-  const MeowBuilder *AddW() const {
+  [[nodiscard]] const MeowBuilder *AddW() const {
     _obj->_data.push_back('w');
     return this;
   }
@@ -65,6 +65,19 @@ class MeowBuilder final : public Builder {
   MeowBuilder *setName(const std::string &name) override {
     this->_obj->_name = name;
     return this;
+  }
+
+  Word<char>* buildM() {
+    AddM();
+    return flush();
+  }
+
+  Word<char> *build() {
+    AddM()->AddE()->AddO()->AddW();
+    // AddE();
+    // AddO();
+    // AddW();
+    return flush();
   }
 
   Word<char> *flush() {
@@ -78,18 +91,19 @@ class MeowBuilder final : public Builder {
 template <typename T>
 class MichaelBuilder : public Builder {};
 
+template <typename T>
 class Director {
   Builder *builder = nullptr;
 
  public:
   void setBuilder(Builder *bld) { builder = bld; }
-  void buildM() const { builder->AddM(); };
-  void buildAll() const {
+  Word<T> *buildM() {
     const auto tp = dynamic_cast<MeowBuilder *>(builder);
-    tp->AddM();
-    tp->AddE();
-    tp->AddO();
-    tp->AddW();
+    return tp->buildM();
+  };
+  Word<T> *buildAll() const {
+    const auto tp = dynamic_cast<MeowBuilder *>(builder);
+    return tp->build();
   };
 };
 
