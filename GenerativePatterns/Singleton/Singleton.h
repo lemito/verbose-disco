@@ -15,7 +15,10 @@ class Singleton {
   Singleton() = default;
 
  public:
-  Singleton(T &data) { _data = data; };
+  Singleton(T &data) {
+    instance = nullptr;
+    _data = data;
+  };
   virtual ~Singleton() { delete instance; };
   /*баним правило 3*/
   Singleton(const Singleton &) = delete;
