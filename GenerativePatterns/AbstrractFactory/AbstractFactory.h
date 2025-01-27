@@ -2,24 +2,25 @@
 // Created by lemito on 1/26/25.
 //
 
-#include <cmath>
-#include <print>
 #ifndef ABSTRACTFACTORY_H
 #define ABSTRACTFACTORY_H
+
+#include <cmath>
+#include <print>
 
 // Btn
 class Dog {
  public:
   double_t length;
-  Dog(double_t len) : length(len){};
-  virtual ~Dog(){};
+  explicit Dog(const double_t len) : length(len){};
+  virtual ~Dog()= default;
   virtual void say_woof() const = 0;
 };
 
 // WinBtn
-class Corgie : public Dog {
+class Corgie final : public Dog {
  public:
-  Corgie(double_t len = 30) : Dog(len){};
+  explicit Corgie(const double_t len = 30) : Dog(len){};
   ~Corgie() override = default;
   void say_woof() const override {
     std::println("Corgie with length = {} say `Woof`", length);
@@ -27,9 +28,9 @@ class Corgie : public Dog {
 };
 
 // UnixBtn
-class GermanSpitz : public Dog {
+class GermanSpitz final : public Dog {
  public:
-  GermanSpitz(double_t len = 20) : Dog(len){};
+  explicit GermanSpitz(const double_t len = 20) : Dog(len){};
   ~GermanSpitz() override = default;
   void say_woof() const override {
     std::println("GermanSpitz with length = {} say `Woof`", length);
@@ -40,13 +41,13 @@ class GermanSpitz : public Dog {
 class Cat {
  public:
   bool wool = false;
-  Cat(bool w = false) : wool(w){};
-  virtual ~Cat(){};
+  explicit Cat(const bool w = false) : wool(w){};
+  virtual ~Cat()= default;
   virtual void say_meow() const = 0;
 };
 
 // WinDialog
-class BritishShorthair : public Cat {
+class BritishShorthair final : public Cat {
  public:
   BritishShorthair() : Cat(true){};
   ~BritishShorthair() override = default;
@@ -56,7 +57,7 @@ class BritishShorthair : public Cat {
 };
 
 // UnixDialog
-class Siamese : public Cat {
+class Siamese final : public Cat {
  public:
   Siamese() : Cat(false){};
   ~Siamese() override = default;
@@ -67,23 +68,23 @@ class Siamese : public Cat {
 
 class AbstractFactory {
  public:
-  virtual ~AbstractFactory(){};
-  virtual Dog* createDog() const = 0;
-  virtual Cat* createCat() const = 0;
+  virtual ~AbstractFactory()= default;
+  [[nodiscard]] virtual Dog* createDog() const = 0;
+  [[nodiscard]] virtual Cat* createCat() const = 0;
 };
 
 // WinCmps
-class Corgie_and_BritishShorthair : public AbstractFactory {
+class Corgie_and_BritishShorthair final : public AbstractFactory {
  public:
-  Dog* createDog() const { return new Corgie(); }
-  Cat* createCat() const { return new BritishShorthair(); }
+  [[nodiscard]] Dog* createDog() const override { return new Corgie(); }
+  [[nodiscard]] Cat* createCat() const override { return new BritishShorthair(); }
 };
 
 // UnixCmps
-class GermanSpitz_and_Siamese : public AbstractFactory {
+class GermanSpitz_and_Siamese final : public AbstractFactory {
  public:
-  Dog* createDog() const { return new GermanSpitz(); }
-  Cat* createCat() const { return new Siamese(); }
+  [[nodiscard]] Dog* createDog() const override { return new GermanSpitz(); }
+  [[nodiscard]] Cat* createCat() const override { return new Siamese(); }
 };
 
 #endif  // ABSTRACTFACTORY_H
