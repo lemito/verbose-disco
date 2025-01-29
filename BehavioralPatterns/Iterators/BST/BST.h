@@ -116,8 +116,55 @@ class BST {
     T& operator*() { return cur->_data; }
   };
 
+  class RInorderIterator {
+   private:
+    std::stack<Node*> _path;
+    Node* cur;
+
+    void go_to_right(Node* n) {
+      while (n) {
+        _path.push(n);
+        n = n->_right;
+      }
+      return;
+    }
+
+    Node* TPOP(std::stack<Node*>& st) {
+      if (st.empty()) return nullptr;
+      auto res = st.top();
+      st.pop();
+      return res;
+    }
+
+   public:
+    RInorderIterator(Node* n) {
+      go_to_right(n);
+
+      cur = TPOP(_path);
+    }
+
+    RInorderIterator& operator++() {
+      if (cur == nullptr) return *this;
+      if (cur->_right != nullptr) go_to_right(cur->_left);
+      cur = TPOP(_path);
+      return *this;
+    }
+
+    RInorderIterator& operator++(int) {
+      RInorderIterator* tmp = *this;
+      ++(*this);
+      return tmp;
+    }
+
+    bool operator==(const RInorderIterator& other) { return cur == other.cur; }
+    bool operator!=(const RInorderIterator& other) { return cur != other.cur; }
+    T& operator*() { return cur->_data; }
+  };
+
   constexpr InorderIterator begin() { return InorderIterator(_root); };
   constexpr InorderIterator end() { return InorderIterator(nullptr); };
+  constexpr RInorderIterator rbegin() { return RInorderIterator(_root); };
+  constexpr RInorderIterator rend() { return RInorderIterator(nullptr); };
 
   BST(const C& comparator = C(std::less<T>()))
       : _root(nullptr), cmp(comparator) {}

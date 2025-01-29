@@ -29,7 +29,11 @@ int main(int argc, char const *argv[]) {
   for (auto it = tree.begin(); it != tree.end(); ++it) {
     std::cout << *it << " ";
   }
-  std::cout << "\n" << *meow << std::endl;
+  std::cout << "\n";
+  for (auto it = tree.rbegin(); it != tree.rend(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << "\n";
   tree.remove(14);
   BST<int> c = tree;
   a = tree;
