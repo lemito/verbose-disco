@@ -2,6 +2,14 @@
 // Created by lemito on 1/28/25.
 //
 
+/*
+       10
+    5     15
+  3  6  14  16
+
+
+*/
+
 #ifndef BST_H
 #define BST_H
 
@@ -30,6 +38,86 @@ class BST {
 
   Node* _root = nullptr;
   C cmp;  // компаратор
+
+  class InorderIterator {
+   private:
+    std::stack<Node*> _path;
+    Node* cur;
+
+    void go_to_left(Node* n) {
+      while (n) {
+        _path.push(n);
+        n = n->_left;
+      }
+      return;
+    }
+
+    Node* TPOP(std::stack<Node*>& st) {
+      if (st.empty()) return nullptr;
+      auto res = st.top();
+      st.pop();
+      return res;
+    }
+
+   public:
+    InorderIterator(Node* n) {
+      go_to_left(n);
+
+      cur = TPOP(_path);
+    }
+
+    /*
+       10
+    5     15
+  3  6  14  16
+
+    st: 5 10
+    cur: 3
+
+    st: 10
+    cur: 5
+    st: 6 10
+
+    st: 10
+    cur: 6
+
+    st:
+    cur: 10
+    st: 14 15
+
+    st: 15
+    cur: 14
+
+    st:
+    cur: 15
+
+    st: 16
+    cur: 15
+
+    st:
+    cur: 16
+
+    */
+    InorderIterator& operator++() {
+      if (cur == nullptr) return *this;
+      if (cur->_right != nullptr) go_to_left(cur->_right);
+      cur = TPOP(_path);
+      return *this;
+    }
+
+    InorderIterator& operator++(int) {
+      InorderIterator* tmp = *this;
+      ++(*this);
+      return tmp;
+    }
+
+    bool operator==(const InorderIterator& other) { return cur == other.cur; }
+    bool operator!=(const InorderIterator& other) { return cur != other.cur; }
+    T& operator*() { return cur->_data; }
+  };
+
+  constexpr InorderIterator begin() { return InorderIterator(_root); };
+  constexpr InorderIterator end() { return InorderIterator(nullptr); };
 
   BST(const C& comparator = C(std::less<T>()))
       : _root(nullptr), cmp(comparator) {}
