@@ -17,3 +17,4 @@ add_executable(builder
 add_executable(FactoryMethod GenerativePatterns/FactoryMethod/FactoryMethod.cpp GenerativePatterns/FactoryMethod/FactoryMethod.h)
 add_executable(AbstractFactory GenerativePatterns/AbstrractFactory/AbstractFactory.cpp GenerativePatterns/AbstrractFactory/AbstractFactory.h)
 add_executable(BST BehavioralPatterns/Iterators/BST/BST.cpp BehavioralPatterns/Iterators/BST/BST.h)
+add_executable(Prototype GenerativePatterns/Prototype/Prototype.cpp GenerativePatterns/Prototype/Prototype.h)
