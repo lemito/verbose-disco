@@ -4,9 +4,9 @@
 
 #include "AbstractFactory.h"
 
-int test(AbstractFactory& fac) {
-  Dog* dog = fac.createDog();
-  Cat* cat = fac.createCat();
+int test(const AbstractFactory& fac) {
+  const Dog* dog = fac.createDog();
+  const Cat* cat = fac.createCat();
   dog->say_woof();
   std::print("\n");
   cat->say_meow();
@@ -16,11 +16,11 @@ int test(AbstractFactory& fac) {
   return 0;
 }
 
-int main(int argc, char const* argv[]) {
-  Corgie_and_BritishShorthair* cab = new Corgie_and_BritishShorthair();
+int main() {
+  const auto* cab = new Corgie_and_BritishShorthair();
   test(*cab);
   delete cab;
-  GermanSpitz_and_Siamese* gas = new GermanSpitz_and_Siamese();
+  const auto* gas = new GermanSpitz_and_Siamese();
   test(*gas);
   delete gas;
   return 0;

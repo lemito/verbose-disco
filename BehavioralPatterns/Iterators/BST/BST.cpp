@@ -14,7 +14,7 @@
 
 
 */
-int main(int argc, char const *argv[]) {
+int main() {
   BST<int> tree, a;
   tree.insert(10);
   tree.insert(5);

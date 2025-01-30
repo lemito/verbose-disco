@@ -29,7 +29,7 @@ class BST {
     Node* _right;
 
     Node() : _data(0), _parent(nullptr), _left(nullptr), _right(nullptr){};
-    Node(T data)
+    explicit Node(T data)
         : _data(data), _parent(nullptr), _left(nullptr), _right(nullptr){};
     ~Node() { _parent = _left = _right = nullptr; }
     Node(Node& n) = delete;
@@ -49,8 +49,7 @@ class BST {
         _path.push(n);
         n = n->_left;
       }
-      return;
-    }
+         }
 
     Node* TPOP(std::stack<Node*>& st) {
       if (st.empty()) return nullptr;
@@ -60,7 +59,7 @@ class BST {
     }
 
    public:
-    InorderIterator(Node* n) {
+    explicit InorderIterator(Node* n) {
       go_to_left(n);
 
       cur = TPOP(_path);
@@ -105,8 +104,8 @@ class BST {
       return *this;
     }
 
-    InorderIterator& operator++(int) {
-      InorderIterator* tmp = *this;
+    InorderIterator operator++(int) {
+      InorderIterator tmp = *this;
       ++(*this);
       return tmp;
     }
@@ -126,8 +125,7 @@ class BST {
         _path.push(n);
         n = n->_right;
       }
-      return;
-    }
+         }
 
     Node* TPOP(std::stack<Node*>& st) {
       if (st.empty()) return nullptr;
@@ -137,7 +135,7 @@ class BST {
     }
 
    public:
-    RInorderIterator(Node* n) {
+    explicit RInorderIterator(Node* n) {
       go_to_right(n);
 
       cur = TPOP(_path);
@@ -150,8 +148,8 @@ class BST {
       return *this;
     }
 
-    RInorderIterator& operator++(int) {
-      RInorderIterator* tmp = *this;
+    RInorderIterator operator++(int) {
+      RInorderIterator tmp = *this;
       ++(*this);
       return tmp;
     }
@@ -166,7 +164,7 @@ class BST {
   constexpr RInorderIterator rbegin() { return RInorderIterator(_root); };
   constexpr RInorderIterator rend() { return RInorderIterator(nullptr); };
 
-  BST(const C& comparator = C(std::less<T>()))
+  explicit BST(const C& comparator = C(std::less<T>()))
       : _root(nullptr), cmp(comparator) {}
   ~BST() { _clear(_root); };
 
@@ -264,7 +262,7 @@ class BST {
       }
     }
   };
-  bool isContain(T data) {
+  constexpr bool isContain(T data) {
     Node* cur = _root;
     while (cur) {
       if (cmp(data, cur->_data)) {
