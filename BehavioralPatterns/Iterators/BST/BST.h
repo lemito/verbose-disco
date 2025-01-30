@@ -39,7 +39,11 @@ class BST {
   Node* _root = nullptr;
   C cmp;  // компаратор
 
+// TODO: можно ли сделать it--, it-2 и тп операция RAI
   class InorderIterator {
+    using difference_type = std::ptrdiff_t;
+    using value_type = T;
+
    private:
     std::stack<Node*> _path;
     Node* cur;
@@ -49,7 +53,7 @@ class BST {
         _path.push(n);
         n = n->_left;
       }
-         }
+    }
 
     Node* TPOP(std::stack<Node*>& st) {
       if (st.empty()) return nullptr;
@@ -116,6 +120,9 @@ class BST {
   };
 
   class RInorderIterator {
+    using difference_type = std::ptrdiff_t;
+    using value_type = T;
+
    private:
     std::stack<Node*> _path;
     Node* cur;
@@ -125,7 +132,7 @@ class BST {
         _path.push(n);
         n = n->_right;
       }
-         }
+    }
 
     Node* TPOP(std::stack<Node*>& st) {
       if (st.empty()) return nullptr;
