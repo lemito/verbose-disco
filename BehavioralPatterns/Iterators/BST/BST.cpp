@@ -16,13 +16,7 @@
 */
 int main() {
   BST<int> tree, a;
-  tree.insert(10);
-  tree.insert(5);
-  tree.insert(15);
-  tree.insert(3);
-  tree.insert(6);
-  tree.insert(14);
-  tree.insert(16);
+  tree.big_insert({10, 5, 15, 3, 6, 14, 26});
   std::cout << tree.isContain(5) << tree.isContain(4) << tree.isContain(6)
             << tree.isContain(100) << "\n";
   auto meow = tree.begin();

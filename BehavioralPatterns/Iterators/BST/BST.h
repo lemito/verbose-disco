@@ -14,11 +14,12 @@ TODO: самобалансировка
 #define BST_H
 
 #include <functional>
+#include <initializer_list>
 #include <iostream>
 #include <stack>
 
 // шаблон: T - тип, C - компоратор
-template <typename T, typename C = std::less<T>>
+template <typename T, typename C = std::less<T>, typename... Args>
 class BST {
  public:
   class Node {
@@ -37,9 +38,11 @@ class BST {
   };
 
   Node* _root = nullptr;
+  std::size_t node_cnt;
+  std::size_t _height;
   C cmp;  // компаратор
 
-// TODO: можно ли сделать it--, it-2 и тп операция RAI
+  // TODO: можно ли сделать it--, it-2 и тп операция RAI
   class InorderIterator {
     using difference_type = std::ptrdiff_t;
     using value_type = T;
@@ -171,8 +174,10 @@ class BST {
   constexpr RInorderIterator rbegin() { return RInorderIterator(_root); };
   constexpr RInorderIterator rend() { return RInorderIterator(nullptr); };
 
+  constexpr size_t get_height() const { return _height; }
+
   explicit BST(const C& comparator = C(std::less<T>()))
-      : _root(nullptr), cmp(comparator) {}
+      : _root(nullptr), node_cnt(0), cmp(comparator) {}
   ~BST() { _clear(_root); };
 
   void _copy(Node* n) {
@@ -190,13 +195,15 @@ class BST {
     delete n;
   }
 
-  BST(const BST& other) : _root(nullptr), cmp(other.cmp) {
+  BST(const BST& other) : _root(nullptr), node_cnt(0), cmp(other.cmp) {
     Node* cur = other._root;
     _copy(cur);
   }
+
   BST& operator=(const BST& other) {
     if (this == &other) return *this;
     _clear(_root);
+    node_cnt = 0;
     cmp = other.cmp;
     _copy(other._root);
     return *this;
@@ -223,6 +230,7 @@ class BST {
     Node* obj = new Node(data);
     if (_root == nullptr) {
       _root = obj;
+      node_cnt++;
       return;
     }
     Node* cur = _root;
@@ -231,6 +239,7 @@ class BST {
         if (cur->_left == nullptr) {
           cur->_left = obj;
           obj->_parent = cur;
+          node_cnt++;
           return;
         }
         cur = cur->_left;
@@ -238,6 +247,7 @@ class BST {
         if (cur->_right == nullptr) {
           obj->_parent = cur;
           cur->_right = obj;
+          node_cnt++;
           return;
         }
         cur = cur->_right;
@@ -247,6 +257,14 @@ class BST {
       }
     }
   };
+
+  void big_insert(std::initializer_list<T> ins) {
+    for (const auto& elem : ins) {
+      this->insert(elem);
+    }
+  }
+  // void big_insert(Args... args) { constexpr size_t cnt = sizeof...(args); }
+
   void remove(T data) {
     Node* cur = _root;
     while (cur) {
@@ -265,10 +283,15 @@ class BST {
           for_swap->_parent->_right = nullptr;
         }
         delete for_swap;
+        node_cnt--;
         return;
       }
     }
+    return;
   };
+
+  void big_remove() {}
+
   constexpr bool isContain(T data) {
     Node* cur = _root;
     while (cur) {
