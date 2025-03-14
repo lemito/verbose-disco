@@ -1,6 +1,10 @@
 #include <concepts>
 #include <iostream>
 #include <type_traits>
+/*
+fold expr (свертка) - прикол С++20, который позволяет сокращать запись для множественных действий с бинарой операцией
+https://en.cppreference.com/w/cpp/language/fold
+*/
 
 template <typename... Args>
 void hello(Args&&... args) {
